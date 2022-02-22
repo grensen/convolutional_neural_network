@@ -1,4 +1,13 @@
 # convolutional_neural_network
+~~~cs
+// 1. cnn declaration
+int startDimension = 28; // or (int) sqrt(784)
+int[] _cnn = { 1, 32, 64 }; // non-RGB = 1 or RGB = 3 for start dimension
+int[] _filter = {  5,  5 }; // x and y dim
+int[] _stride = {  2,  2 }; // replaces pooling with higher strides than 1 
+~~~
+
+Then...
 
 ~~~cs
   for (int l = 0; l < cnn_layerLen; l++) // cnn layers : 2
