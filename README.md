@@ -4,11 +4,16 @@
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/convolution_meaning.png?raw=true">
 </p>
 
+Quite intimidating when you look for the meaning of convolution. The idea behind this article is to make this idea of convolutional neural networks simple as possible.
+A convolutional neural network is simply a neural network with a convolutional network on top of it. The application area of CNNs is mainly in image recognition for 2-dimensional images. The basic idea is just to print new images with stamps, which are often called filters or even better kernels.
+
 ## The Convolution Step
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/convolution_explainer.gif?raw=true">
 </p>
+
+The animation shows all the magic of convolution. Initially, the filter consists of randomly selected weights. During training, these weights are formed according to the direction of the network target, extracting features that allow these networks to achieve much higher accuracy. 
 
 ## The Pooling Step
 
@@ -16,11 +21,17 @@
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/max_pooling_explainer.gif?raw=true">
 </p>
 
+The convolution is often followed by the pooling step. Actually, pooling is not necessary, but since a convolutional network creates many of these feature maps, the computational effort is so enormous that it is common practice to reduce the resolution of the outputs. In addition to the max pooling shown in the animation, there is also average pooling and other types of pooling.
+
+Unlike the common practice, however, I do not use a pooling technique here. Instead, a stride of 2 is used in the convolution, which produces the same output map.
+
 ## Make It Simple
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/NN_vs._CNN_ji.png?raw=true">
 </p>
+
+
 
 # convolutional_neural_network
 
