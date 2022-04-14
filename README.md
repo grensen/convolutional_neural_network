@@ -1,4 +1,4 @@
-## Basic Convolutional neural network
+### Basic Convolutional neural network
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/convolution_meaning.png?raw=true">
@@ -7,7 +7,7 @@
 Quite intimidating when you look for the meaning of convolution. The idea behind this article is to make this idea of convolutional neural networks simple as possible.
 A convolutional neural network is simply a neural network with a convolutional network on top of it. The application area of CNNs is mainly in image recognition for 2-dimensional images. The basic idea is just to print new images with stamps, which are often called filters or even better kernels.
 
-## The Convolution Step
+### The Convolution Step
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/convolution_explainer.gif?raw=true">
@@ -15,7 +15,7 @@ A convolutional neural network is simply a neural network with a convolutional n
 
 The animation shows all the magic of convolution. Initially, the filter consists of randomly selected weights. During training, these weights are formed according to the direction of the network target, extracting features that allow these networks to achieve much higher accuracy. 
 
-## The Pooling Step
+### The Pooling Step
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/max_pooling_explainer.gif?raw=true">
@@ -25,11 +25,13 @@ The convolution is often followed by the pooling step. Actually, pooling is not 
 
 Unlike the common practice, however, I do not use a pooling technique here. Instead, a stride of 2 is used in the convolution, which produces the same output map.
 
-## Make It Simple
+### Make It Simple
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/NN_vs._CNN_ji.png?raw=true">
 </p>
+
+In my mind, neural networks and convolutional networks are quite similar. The NN has an input neuron on the left with its weight connected to an output neuron on the right. The CNN follows the same connection pattern. Only that it is a whole map of neurons that are connected with a kernel filter consisting of several weights to generate the output map. 
 
 
 
