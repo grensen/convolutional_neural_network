@@ -1,4 +1,31 @@
+## Basic Convolutional neural network
+
+<p align="center">
+  <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/convolution_meaning.png?raw=true">
+</p>
+
+## The Convolution Step
+
+<p align="center">
+  <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/convolution_explainer.gif?raw=true">
+</p>
+
+## The Pooling Step
+
+<p align="center">
+  <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/max_pooling_explainer.gif?raw=true">
+</p>
+
+## Make It Simple
+
+<p align="center">
+  <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/NN_vs._CNN_ji.png?raw=true">
+</p>
+
 # convolutional_neural_network
+
+
+
 ~~~cs
 // 1. cnn declaration
 int startDimension = 28; // or (int) sqrt(784)
