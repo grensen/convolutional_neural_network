@@ -36,6 +36,15 @@ Unlike the common practice, however, I do not use a pooling technique here. Inst
 
 In my mind, neural networks and convolutional networks are quite similar. The NN has an input neuron on the left with its weight connected to an output neuron on the right. The CNN follows the same connection pattern. Only that it is a whole map of neurons that are connected with a kernel filter consisting of several weights to generate the output map. 
 
+### The Demo
+
+<p align="center">
+  <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/cnn_demo.png?raw=true">
+</p>
+
+To run the demo program, you must have VisualStudio2022 installed on your machine. Then just start a console application with DotNet 6, copy the code and change from debug to release mode and run the demo. MNIST data and network are then managed by the code. This line `AutoData d = new(@"C:_mnist\");` specifies where the MNIST dataset is stored. To do this, the data is simply loaded from my github on first use. On future starts the data will be loaded from the directory where it was saved.
+
+Lets take a look at the demo...
 
 
 # convolutional_neural_network
