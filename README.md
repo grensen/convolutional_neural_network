@@ -7,7 +7,7 @@
 
 Quite intimidating when you look for the meaning of convolution. The idea behind this article is to make this idea of convolutional neural networks (CNN) simple as possible. A convolutional neural network is simply a neural network (NN) with a convolutional network on top of it. The application area of CNNs aims mainly in image recognition for 2-dimensional images. The basic idea is just to print new images with stamps, which are often called filters or even better kernels.
 
-### The Convolution Step
+## The Convolution Step
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/convolution_explainer.gif?raw=true">
@@ -25,7 +25,7 @@ The convolution is often followed by the pooling step. Actually, pooling is not 
 
 Unlike the common practice, however, I do not use a pooling technique here. Instead, a stride of 2 is used in the convolution, which produces the same output map.
 
-### Make It Simple
+## Make It Simple
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/NN_vs._CNN_ji.png?raw=true">
@@ -35,7 +35,7 @@ In my mind, neural networks and convolutional networks are quite similar. The NN
 
 To run the demo program, you must have VisualStudio2022 installed on your machine. Then just start a console application with DotNet 6, copy the code and change from debug to release mode and run the demo. MNIST data and network are then managed by the code. This line `AutoData d = new(@"C:_mnist\");` specifies where the MNIST dataset is stored. To do this, the data is simply loaded from my github on first use. On future starts the data will be loaded from the directory where it was saved.
 
-### The Demo
+## The Demo
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/cnn_demo.png?raw=true">
@@ -67,7 +67,44 @@ Of course, other network designs are possible, but the one presented worked best
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/nn_ref.png?raw=true">
 </p>
 
-# convolutional_neural_network
+## Forward Pass
+
+~~~cs
+// 4.1 cnn ff
+static void ConvolutionForward(int[] cnn, int[] dim, int[] cs, int[] filter, int[] kstep, int[] stride, float[] conv, float[] kernel)
+{
+    for (int i = 0; i < cnn.Length - 1; i++)
+    {
+        int left = cnn[i], right = cnn[i + 1], lDim = dim[i], rDim = dim[i + 1], lStep = cs[i + 0], rStep = cs[i + 1],
+            kd = filter[i], ks = kstep[i], st = stride[i], lMap = lDim * lDim, rMap = rDim * rDim, kMap = kd * kd, sDim = st * lDim;
+
+        // convolution
+        for (int l = 0, ls = lStep; l < left; l++, ls += lMap) // input channel feature map 
+            for (int r = 0, rs = rStep; r < right; r++, rs += rMap) // output channel feature map 
+            {
+                int k = rs; // output map position 
+                for (int y = 0, w = ks + (l * right + r) * kMap; y < rDim; y++) // conv dim y
+                    for (int x = 0; x < rDim; x++, k++) // conv dim x
+                    {
+                        float sum = 0;
+                        int j = ls + y * sDim + x * st; // input map position for kernel operation
+                        for (int col = 0, fid = 0; col < kd; col++) // filter dim y 
+                            for (int row = col * lDim, len = row + kd; row < len; row++, fid++) // filter dim x     
+                                sum += conv[j + row] * kernel[w + fid];
+                        conv[k] += sum;
+                    }
+            }
+
+        // relu activation
+        for (int r = 0, kN = rStep; r < right; r++, kN += rMap) // output maps 
+            for (int k = kN, K = k + rMap; k < K; k++) // conv map
+            {
+                float sum = conv[k];
+                conv[k] = sum > 0 ? sum * left : 0; // relu activation for each neuron
+            }
+    }
+}
+~~~
 
 
 
