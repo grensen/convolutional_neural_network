@@ -59,6 +59,17 @@ After the network is ready to start, the training for 20 epochs begins. This mea
 
 Of course, other network designs are possible, but the one presented worked best among those I tested. Alternatively, I could have used a stride 2 on layer 2 to create more output maps. However, my demo might have ended up at 99.1% or taken 10 minutes.
 
+### Transform To Neural Network
+
+<p align="center">
+  <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/nn_demo.png?raw=true">
+</p>
+
+### Reference From 2020
+
+<p align="center">
+  <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/nn_ref.png?raw=true">
+</p>
 
 # convolutional_neural_network
 
