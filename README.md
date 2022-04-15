@@ -45,6 +45,19 @@ In my mind, neural networks and convolutional networks are quite similar. The NN
 To run the demo program, you must have VisualStudio2022 installed on your machine. Then just start a console application with DotNet 6, copy the code and change from debug to release mode and run the demo. MNIST data and network are then managed by the code. This line `AutoData d = new(@"C:_mnist\");` specifies where the MNIST dataset is stored. To do this, the data is simply loaded from my github on first use. On future starts the data will be loaded from the directory where it was saved.
 
 Lets take a look at the demo...
+The CNN in its current form has 3 hyperparameters. 
+
+The convolution describes the maps used for each layer. The first layer creates 8 new output maps from the input map through 8 kernel filters. For this a 5 x 5 kernel is used. Additionally a stride of 2 is used to reduce the map size. Each of the eight maps has a dimension of 12 and a resolution of 144 pixels.
+
+These 8 feature maps build on the next layer the input maps which now form with 8 * 16 kernels with a filter size of 3 x 3 to create 16 output maps. Each of the 8 * 144 input maps are now "fully connected" with one kernel to one output map. Thus, 16 new output maps are created with a dimension of 10 and a resolution of 100. The output layer thus has 1600 neurons, which are then sent to the neural network.
+
+You may wonder why I built the network this way. Actually, the reason is essentially due to performance reasons.
+
+The larger 5 x 5 kernel on layer 1 worked very well, but is relatively expensive to compute. The stride of 2 cuts this calculation massively and also reduces the output resolution. Only 8 kernels are used here. The 8 input maps that generate 16 output maps already use 128 filters. Since the size of the filter reduces the calculation time, I have reduced the size here, the stride remains 1.
+
+After the network is ready to start, the training for 20 epochs begins. This means that the entire MNIST dataset of 60,000 examples is simply trained 20 times. All this happens on my system in 5 minutes. However, it could take a little longer depending on the computer or laptop used, but it should be possible to estimate this due to the epoch-by-epoch output. 
+
+Of course, other network designs are possible, but the one presented worked best among those I tested. Alternatively, I could have used a stride 2 on layer 2 to create more output maps. However, my demo might have ended up at 99.1% or taken 10 minutes.
 
 
 # convolutional_neural_network
