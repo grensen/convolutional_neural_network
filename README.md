@@ -61,11 +61,17 @@ Of course, other network designs are possible, but the one presented worked best
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/nn_demo.png?raw=true">
 </p>
 
+My CNN approach may be slightly different from the common practice, since usually the dimensions are co-determined, and thus also the size of the last layer that passes its signal to the neural network. For me it makes more sense to do all this automatically during initialization. That is why the first layer of the neural network is also adjusted with every CNN initialization. 
+
+With isCNN = false; you only switch off the convolutional network. That means with the first layer and 784 neurons the network now works as a neural network. This is pretty cool I think and 98.5% accuracy is pretty decent when it is only one NN.
+
 ### Reference From 2020
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/nn_ref.png?raw=true">
 </p>
+
+If only the neural network in net = { 784, 16, 16, 10 } is trained at only one epoch, this is what comes out. Not spectacular, but exactly the result I have already achieved in 2020. Although this work is completely different in its construction from the one 2 years ago, it was always beneficial to take the old result in order to hopefully assess my current work correctly.
 
 ## Forward Pass
 
@@ -104,6 +110,15 @@ static void ConvolutionForward(int[] cnn, int[] dim, int[] cs, int[] filter, int
 }
 ~~~
 
+My old approach to running through neural networks was always perceptron wise. My thinking was also kind of gradual. Which was not necessarily advantageous. But all the small steps probably overwhelmed me at first, looking back. 
+
+This is probably the biggest trick that made this work possible in the first place. The forward process was still an idea for me at the time. In the meantime it has changed and I divide the process into 2 basic steps. First, the perzeoptron way was exchanged for the layer way. In addition, all positions (input map, kernel, outputmap) are needed.
+
+Then it is always the same, the algorithm starts with the input layer, 784 neurons in our case and then calculates with the respective kernel the desired output map number. After that all outmap neurons are activated. If another layer follows during the forward pass, these output maps become input maps and then calculate the next output map with additional kernels. 
+
+Actually, now the really hard work begins, the backpropagation. Forward is often considered hard, but backward still squares the whole thing with pleasure. But not for us, we are almost done with the backpropagation.
+
+## Backpropagation
 
 ## Intro
 
