@@ -120,29 +120,90 @@ Actually, now the really hard work begins, the backpropagation. Forward is often
 
 ## Backpropagation
 
-## Intro
+The backpropagation counts to the hardest part, but not with the used implementation technique. To make a huge trick we have to step back. NN ~== CNN means we can take a lot of steps from the neural network to realize the idea of a CNN. You should take a look at this idea here for [feed forward](https://github.com/grensen/neural_network_2022#ff) and [feed backward](https://github.com/grensen/neural_network_2022#bp), it is similiar to what I use here. 
 
-## Before Convolutions
+Here is the code for the forward pass:
+~~~cs
+for (int i = 0; i < cnn.Length - 1; i++)
+{
+    int left = cnn[i], right = cnn[i + 1], lDim = dim[i], rDim = dim[i + 1], lStep = cs[i + 0], rStep = cs[i + 1],
+        kd = filter[i], ks = kstep[i], st = stride[i], lMap = lDim * lDim, rMap = rDim * rDim, kMap = kd * kd, sDim = st * lDim;
+    // convolution
+    for (int l = 0, ls = lStep; l < left; l++, ls += lMap) // input channel feature map 
+        for (int r = 0, rs = rStep; r < right; r++, rs += rMap) // output channel feature map 
+        {
+              // CNN specific operations
+        }
+}
+~~~
+Change the first loop to, so we go back:
+~~~cs
+for (int i = cnn.Length - 2; i >= 0; i--)
+~~~
+Now we need the respect to the derivative and end up with:
+~~~cs
+// convolution backwards
+for (int i = cnn.Length - 2; i >= 0; i--)
+    for (int left = cnn[i], right = cnn[i + 1], lDim = dim[i], rDim = dim[i + 1], lStep = cs[i + 0], rStep = cs[i + 1],
+        kd = filter[i], ks = kstep[i], st = stride[i], lMap = lDim * lDim, rMap = rDim * rDim, kMap = kd * kd, sDim = st * lDim, l = 0, ls = lStep
+        ; l < left; l++, ls += lMap) // input channel feature map 
+        for (int r = 0, rs = rStep; r < right; r++, rs += rMap) // output channel feature map 
+            for (int y = 0, k = rs, w = ks + (l * right + r) * kMap; y < rDim; y++) // conv dim y
+                for (int x = 0; x < rDim; x++, k++) // conv dim x
+                    if (conv[k] > 0) // relu derivative
+                    {
+                        // CNN specific operations
+                    }
+~~~
+And now we are ready to get the gradients:
+~~~cs
+    // convolution gradient
+    for (int i = cnn.Length - 2; i >= 1; i--)
+        for (int left = cnn[i], right = cnn[i + 1], lDim = dim[i], rDim = dim[i + 1], lStep = cs[i + 0], rStep = cs[i + 1],
+            kd = filter[i], ks = kstep[i], st = stride[i], lMap = lDim * lDim, rMap = rDim * rDim, kMap = kd * kd, sDim = st * lDim, l = 0, ls = lStep
+            ; l < left; l++, ls += lMap) // input channel feature map 
+            for (int r = 0, rs = rStep; r < right; r++, rs += rMap) // output channel feature map 
+                for (int y = 0, k = rs, w = ks + (l * right + r) * kMap; y < rDim; y++) // conv dim y
+                    for (int x = 0; x < rDim; x++, k++) // conv dim x
+                        if (conv[k] > 0) // relu derivative
+                        {
+                            float gra = cGradient[k];
+                            int j = ls + y * sDim + x * st; // input map position 
+                            for (int col = 0, fid = 0; col < kd; col++) // filter dim y cols
+                                for (int row = col * lDim, len = row + kd; row < len; row++, fid++) // filter dim x rows    
+                                    cGradient[j + row] += kernel[w + fid] * gra;
+                        }
+~~~
+The Delta step is used like this:
+~~~cs
+    // kernel delta with kernel weights update 
+    for (int i = cnn.Length - 2; i >= 0; i--)
+        for (int left = cnn[i], right = cnn[i + 1], lDim = dim[i], rDim = dim[i + 1], lStep = cs[i + 0], rStep = cs[i + 1],
+            kd = filter[i], ks = kstep[i], st = stride[i], lMap = lDim * lDim, rMap = rDim * rDim, kMap = kd * kd, sDim = st * lDim, l = 0, ls = lStep;
+            l < left; l++, ls += lMap) // input channel feature map 
+            for (int r = 0, rs = rStep; r < right; r++, rs += rMap) // output channel feature map 
+                for (int y = 0, k = rs, w = ks + (l * right + r) * kMap; y < rDim; y++) // conv dim y
+                    for (int x = 0; x < rDim; x++, k++) // conv dim x
+                        if (conv[k] > 0) // relu derivative
+                        {
+                            float gra = cGradient[k];
+                            int j = ls + y * sDim + x * st; // input map position 
+                            for (int col = 0, fid = 0; col < kd; col++) // filter dim y cols
+                                for (int row = col * lDim, len = row + kd; row < len; row++, fid++) // filter dim x rows    
+                                    kernel[w + fid] += conv[j + row] * gra * 0.005f;// * 0.5f;
+                        }
+~~~
 
+And now the magic is real! The trick is simpel, you need to grok the mechanic behind neural networks, then you build your recipe and with that you can build your CNN or maybe a system you cannot imagine today.
 
-
-## Effekt of filters
-
-## A simple CNN
-
-## A better CNN
-
-## Padding
-
-## Max Pooling
-
-## Naiv Backpropagation
-
-## Flipped Kernel Filter
-
-## FF + BP + Update
-
-## A Serios Approach
-
-## Summary
+The construction how to calculate through your system plus a way to let your system learn:
+~~~
+Forwards:
+neuronOutputRight += neuronInputLeft * weight
+Backwards:
+gradientInputLeft += weight * gradientOutputRight
+Update:
+weight += neuronInputLeft * gradientOutputRight
+~~~
+Brings a basic CNN to life.
 
