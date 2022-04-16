@@ -1,5 +1,5 @@
 
-# Basic Convolutional Neuronal Network Demo With 99,2 Accuracy On MNIST in 5 Minutes Using C#
+# Basic Convolutional Neuronal Network Demo With 99,2 Accuracy On MNIST In 5 Minutes Using C#
 
 <p align="center">
   <img src="https://github.com/grensen/convolutional_neural_network/blob/main/figures/convolution_meaning.png?raw=true">
