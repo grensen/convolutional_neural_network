@@ -51,7 +51,7 @@ You may wonder why I built the network this way. Actually, the reason is essenti
 
 The larger 5 x 5 kernel on layer 1 worked very well, but is relatively expensive to compute. The stride of 2 cuts this calculation massively and also reduces the output resolution. Only 8 kernels are used here. The 8 input maps that generate 16 output maps already use 128 filters. Since the size of the filter reduces the calculation time, I have reduced the size here, the stride remains 1.
 
-After the network is ready to start, the training for 20 epochs begins. This means that the entire MNIST dataset of 60,000 examples is simply trained 20 times. All this happens on my system in 5 minutes. However, it could take a little longer depending on the computer or laptop used, but it should be possible to estimate this due to the epoch-by-epoch output. 
+After the network is ready to start, the training for 20 epochs begins. This means that the entire MNIST dataset of 60,000 examples is simply trained 20 times. After every epoch the learning and momentum rate is decreased by a factor. All this happens on my system in 5 minutes. However, it could take a little longer depending on the computer or laptop used, but it should be possible to estimate this due to the epoch-by-epoch output. 
 
 Of course, other network designs are possible, but the one presented worked best among those I tested. Alternatively, I could have used a stride 2 on layer 2 to create more output maps. However, my demo might have ended up at 99.1% or taken 10 minutes.
 
@@ -112,17 +112,17 @@ static void ConvolutionForward(int[] cnn, int[] dim, int[] cs, int[] filter, int
 
 My old approach to running through neural networks was always perceptron wise. My thinking was also kind of gradual. Which was not necessarily advantageous. But all the small steps probably overwhelmed me at first, looking back. 
 
-This is probably the biggest trick that made this work possible in the first place. The forward process was still an idea for me at the time. In the meantime it has changed and I divide the process into 2 basic steps. First, the perzeoptron way was exchanged for the layer way. In addition, all positions (input map, kernel, outputmap) are needed.
+This is probably the biggest trick that made this work possible in first place. The forward process was still an idea for me at the time. In the meantime it has changed and I divide the process into 2 basic steps. First, the perceptron wise way was changed into the layer wise computation. In addition, all positions (input map, kernel, outputmap) are needed. An army of arrays is used for this.
 
 Then it is always the same, the algorithm starts with the input layer, 784 neurons in our case and then calculates with the respective kernel the desired output map number. After that all outmap neurons are activated. If another layer follows during the forward pass, these output maps become input maps and then calculate the next output map with additional kernels. 
 
-Actually, now the really hard work begins, the backpropagation. Forward is often considered hard, but backward still squares the whole thing with pleasure. But not for us, we are almost done with the backpropagation.
+Actually, now the really hard work begins, the backpropagation. Forward is often considered hard, but backwards is still harder. But not for us, we are almost done with the backpropagation. Let me explain.
 
 ## Backpropagation
 
-The backpropagation counts to the hardest part, but not with the used implementation technique. To make a huge trick we have to step back. NN ~== CNN means we can take a lot of steps from the neural network to realize the idea of a CNN. You should take a look at this idea here for [feed forward](https://github.com/grensen/neural_network_2022#ff) and [feed backward](https://github.com/grensen/neural_network_2022#bp), it is similiar to what I use here. 
+To make a huge trick we have to step back. NN ~== CNN means we can take a lot of steps from the neural network to realize the idea of a CNN. You should take a look at this idea here for [feed forward](https://github.com/grensen/neural_network_2022#ff) and [feed backward](https://github.com/grensen/neural_network_2022#bp), it is similiar to what I use here. 
 
-Here is the code for the forward pass:
+Here is the code for the forward pass, we cut out the forward stuff:
 ~~~cs
 for (int i = 0; i < cnn.Length - 1; i++)
 {
@@ -140,7 +140,7 @@ Change the first loop to, so we go back:
 ~~~cs
 for (int i = cnn.Length - 2; i >= 0; i--)
 ~~~
-Now we need the respect to the derivative and end up with:
+Now we need to respect the ReLU derivative and end up with:
 ~~~cs
 // convolution backwards
 for (int i = cnn.Length - 2; i >= 0; i--)
@@ -206,4 +206,13 @@ Update:
 weight += neuronInputLeft * gradientOutputRight
 ~~~
 Brings a basic CNN to life.
+
+## Summarized
+
+You have seen here a very powerful CNN in action. Not big, but with very high accuracy. In practice, the network is ranked 60th in the [benchmark](https://paperswithcode.com/sota/image-classification-on-mnist) for now, which is quite good for such a small network without any special techniques. Feel free to play around with it, it should be possible to achieve even better rankings without increasing the effort too much.
+
+But the term convolutional neural network is maybe not quite correct. Here I have taken the shortest path that was possible to me. This includes not only missing pooling, but also the [kernel flip](https://de.mathworks.com/matlabcentral/answers/74274-why-do-we-need-to-flip-the-kernel-in-2d-convolution). The addition of the bias, batch support and including delta learning step (as I have already done for the neural network) and other techniques such as dropout, padding, normalization so that with all the stuff it becomes very complex. So I stop here and hope you can enjoy the demo like I did.
+
+If you want to get even better with building CNNs, it might be worth to taking a look at [Kaggle](https://www.kaggle.com/code/cdeotte/how-to-choose-cnn-architecture-mnist/notebook) to see how the pros build. Cheers!
+
 
